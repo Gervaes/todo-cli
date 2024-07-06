@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -42,4 +44,25 @@ func getTodos() []Todo {
 	}
 
 	return todos
+}
+
+func createTodo(description string) error {
+	projectUrl := getEnvVariable("PROJECT_URL")
+	apiKey := getEnvVariable("API_KEY")
+	client := &http.Client{}
+
+	url := projectUrl + "/todos"
+	payload := []byte(fmt.Sprintf(`{"description":"%s"}`, description))
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(payload))
+
+	req.Header.Set("apikey", apiKey)
+	req.Header.Set("Content-Type", "application/json")
+
+	_, err := client.Do(req)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
