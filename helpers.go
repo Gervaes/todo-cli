@@ -2,8 +2,11 @@ package main
 
 import (
 	"log"
-    "os"
-    "github.com/joho/godotenv"
+	"os"
+	"os/exec"
+	"runtime"
+
+	"github.com/joho/godotenv"
 )
 
 func getEnvVariable(key string) string {
@@ -14,4 +17,24 @@ func getEnvVariable(key string) string {
 	}
 
 	return os.Getenv(key)
+}
+
+// https://stackoverflow.com/a/72863273
+func runCmd(name string, arg ...string) {
+	cmd := exec.Command(name, arg...)
+	cmd.Stdout = os.Stdout
+	cmd.Run()
+}
+
+func clearTerminal() {
+	switch runtime.GOOS {
+	case "darwin":
+		runCmd("clear")
+	case "linux":
+		runCmd("clear")
+	case "windows":
+		runCmd("cmd", "/c", "cls")
+	default:
+		runCmd("clear")
+	}
 }

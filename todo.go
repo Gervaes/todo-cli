@@ -56,5 +56,5 @@ func (t *Todo) ToString() string {
 		log.Fatal(err)
 	}
 
-	return fmt.Sprintf("%4d << [ %s ] %s >> %s", t.Id, date.Format("02-Jan-2006"), t.GetStatus(), t.Description)
+	return fmt.Sprintf("%-5d << [ %s ] %s >> %s", t.Id, date.Format("02-Jan-2006"), t.GetStatus(), t.Description)
 }

@@ -135,3 +135,21 @@ func updateTodo(updatedTodo Todo) error {
 
 	return nil
 }
+
+func deleteTodo(id int) error {
+	projectUrl := getEnvVariable("PROJECT_URL")
+	apiKey := getEnvVariable("API_KEY")
+	client := &http.Client{}
+
+	url := projectUrl + "/todos?id=eq." + strconv.Itoa(id)
+	req, _ := http.NewRequest("DELETE", url, nil)
+	req.Header.Set("apikey", apiKey)
+
+	_, err := client.Do(req)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

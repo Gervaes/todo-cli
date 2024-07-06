@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
+	"os"
 )
 
 func displayTodos() {
@@ -11,14 +13,15 @@ func displayTodos() {
 	for _, todo := range todos {
 		fmt.Println(todo.ToString())
 	}
-	fmt.Println("...")
 }
 
 func main() {
 	var newTodo string
 	var idToUpdate int
+	var idToDelete int
 	flag.StringVar(&newTodo, "c", "", "Creates a new todo for today with the description provided")
 	flag.IntVar(&idToUpdate, "u", 0, "Updates a todo's status to the next logic one")
+	flag.IntVar(&idToDelete, "d", 0, "Deletes a todo from the list")
 	flag.Parse()
 
 	if newTodo != "" {
@@ -40,7 +43,22 @@ func main() {
 		if err != nil {
 			fmt.Printf("Error trying to update Todo: %s\n\n", err.Error())
 		}
+	} else if idToDelete != 0 {
+		fmt.Printf("Are you sure you want to delete a Todo? [y/N]: ")
+		reader := bufio.NewReader(os.Stdin)
+		opt, _, err := reader.ReadRune()
+		if err != nil {
+			fmt.Printf("Error trying to delete Todo: %s\n\n", err.Error())
+		}
+
+		if opt == 'y' || opt == 'Y' {
+			err = deleteTodo(idToDelete)
+
+			if err != nil {
+				fmt.Printf("Error trying to delete Todo: %s\n\n", err.Error())
+			}
+		}
 	}
 
-	displayTodos()
+	clearTerminal()
 }
