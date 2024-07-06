@@ -12,8 +12,8 @@ import (
 )
 
 func getTodos(getAllTodos bool) []Todo {
-	projectUrl := getEnvVariable("PROJECT_URL")
-	apiKey := getEnvVariable("API_KEY")
+	projectUrl := getEnvVariable("TODOS_PROJECT_URL")
+	apiKey := getEnvVariable("TODOS_API_KEY")
 
 	client := &http.Client{}
 	url := projectUrl + "/todos?order=date.desc,created_at.desc"
@@ -51,8 +51,8 @@ func getTodos(getAllTodos bool) []Todo {
 }
 
 func getTodo(id int) (Todo, error) {
-	projectUrl := getEnvVariable("PROJECT_URL")
-	apiKey := getEnvVariable("API_KEY")
+	projectUrl := getEnvVariable("TODOS_PROJECT_URL")
+	apiKey := getEnvVariable("TODOS_API_KEY")
 
 	client := &http.Client{}
 	url := projectUrl + "/todos?id=eq." + strconv.Itoa(id)
@@ -93,8 +93,8 @@ func getTodo(id int) (Todo, error) {
 }
 
 func createTodo(description string) error {
-	projectUrl := getEnvVariable("PROJECT_URL")
-	apiKey := getEnvVariable("API_KEY")
+	projectUrl := getEnvVariable("TODOS_PROJECT_URL")
+	apiKey := getEnvVariable("TODOS_API_KEY")
 	client := &http.Client{}
 
 	url := projectUrl + "/todos"
@@ -120,8 +120,8 @@ func updateTodo(updatedTodo Todo) error {
 		return err
 	}
 
-	projectUrl := getEnvVariable("PROJECT_URL")
-	apiKey := getEnvVariable("API_KEY")
+	projectUrl := getEnvVariable("TODOS_PROJECT_URL")
+	apiKey := getEnvVariable("TODOS_API_KEY")
 	client := &http.Client{}
 
 	url := projectUrl + "/todos?id=eq." + strconv.FormatInt(int64(updatedTodo.Id), 10)
@@ -140,8 +140,8 @@ func updateTodo(updatedTodo Todo) error {
 }
 
 func deleteTodo(id int) error {
-	projectUrl := getEnvVariable("PROJECT_URL")
-	apiKey := getEnvVariable("API_KEY")
+	projectUrl := getEnvVariable("TODOS_PROJECT_URL")
+	apiKey := getEnvVariable("TODOS_API_KEY")
 	client := &http.Client{}
 
 	url := projectUrl + "/todos?id=eq." + strconv.Itoa(id)
