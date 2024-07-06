@@ -34,6 +34,21 @@ func (t *Todo) GetStatus() string {
 	return status
 }
 
+func (t *Todo) UpdateStatus() {
+	var status int8
+
+	switch t.Status {
+	case StillTodo:
+		status = Doing
+	case Doing:
+		status = Done
+	case Done:
+		status = StillTodo
+	}
+
+	t.Status = status
+}
+
 func (t *Todo) ToString() string {
 	date, err := time.Parse("2006-01-02", t.Date)
 
@@ -41,5 +56,5 @@ func (t *Todo) ToString() string {
 		log.Fatal(err)
 	}
 
-	return fmt.Sprintf("[ %s ] %s >> %s", date.Format("02-Jan-2006"), t.GetStatus(), t.Description)
+	return fmt.Sprintf("%4d << [ %s ] %s >> %s", t.Id, date.Format("02-Jan-2006"), t.GetStatus(), t.Description)
 }
