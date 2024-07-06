@@ -13,7 +13,7 @@ func getTodos() []Todo {
 	apiKey := getEnvVariable("API_KEY")
 
 	client := &http.Client{}
-	url := projectUrl + "/todos?date=eq." + time.Now().Format("02-Jan-2006")
+	url := projectUrl + "/todos?date=eq." + time.Now().Format("2006-01-02")
 	req, _ := http.NewRequest("GET", url, nil)
 	req.Header.Set("apikey", apiKey)
 
