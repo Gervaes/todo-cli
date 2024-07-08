@@ -5,10 +5,12 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"todo-cli/internal/database"
+	"todo-cli/internal/helpers"
 )
 
 func displayTodos(getAllTodos bool) {
-	todos := getTodos(getAllTodos)
+	todos := database.GetTodos(getAllTodos)
 
 	if getAllTodos {
 		fmt.Printf("<< All todos (%d)>>\n", len(todos))
@@ -33,20 +35,20 @@ func main() {
 	flag.Parse()
 
 	if newTodo != "" {
-		err := createTodo(newTodo)
+		err := database.CreateTodo(newTodo)
 
 		if err != nil {
 			fmt.Printf("Error trying to create Todo: %s\n\n", err.Error())
 		}
 	} else if idToUpdate != 0 {
-		todo, err := getTodo(idToUpdate)
+		todo, err := database.GetTodo(idToUpdate)
 
 		if err != nil {
 			fmt.Printf("Error trying to update Todo: %s\n\n", err.Error())
 		}
 
 		todo.UpdateStatus()
-		err = updateTodo(todo)
+		err = database.UpdateTodo(todo)
 
 		if err != nil {
 			fmt.Printf("Error trying to update Todo: %s\n\n", err.Error())
@@ -60,7 +62,7 @@ func main() {
 		}
 
 		if opt == 'y' || opt == 'Y' {
-			err = deleteTodo(idToDelete)
+			err = database.DeleteTodo(idToDelete)
 
 			if err != nil {
 				fmt.Printf("Error trying to delete Todo: %s\n\n", err.Error())
@@ -68,6 +70,6 @@ func main() {
 		}
 	}
 
-	clearTerminal()
+	helpers.ClearTerminal()
 	displayTodos(getAllTodos)
 }

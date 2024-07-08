@@ -1,4 +1,4 @@
-package main
+package database
 
 import (
 	"bytes"
@@ -9,11 +9,13 @@ import (
 	"net/http"
 	"strconv"
 	"time"
+	"todo-cli/internal/helpers"
+	. "todo-cli/internal/models"
 )
 
-func getTodos(getAllTodos bool) []Todo {
-	projectUrl := getEnvVariable("TODOS_PROJECT_URL")
-	apiKey := getEnvVariable("TODOS_API_KEY")
+func GetTodos(getAllTodos bool) []Todo {
+	projectUrl := helpers.GetEnvVariable("TODOS_PROJECT_URL")
+	apiKey := helpers.GetEnvVariable("TODOS_API_KEY")
 
 	client := &http.Client{}
 	url := projectUrl + "/todos?order=date.desc,created_at.desc"
@@ -50,9 +52,9 @@ func getTodos(getAllTodos bool) []Todo {
 	return todos
 }
 
-func getTodo(id int) (Todo, error) {
-	projectUrl := getEnvVariable("TODOS_PROJECT_URL")
-	apiKey := getEnvVariable("TODOS_API_KEY")
+func GetTodo(id int) (Todo, error) {
+	projectUrl := helpers.GetEnvVariable("TODOS_PROJECT_URL")
+	apiKey := helpers.GetEnvVariable("TODOS_API_KEY")
 
 	client := &http.Client{}
 	url := projectUrl + "/todos?id=eq." + strconv.Itoa(id)
@@ -92,9 +94,9 @@ func getTodo(id int) (Todo, error) {
 	return todo, nil
 }
 
-func createTodo(description string) error {
-	projectUrl := getEnvVariable("TODOS_PROJECT_URL")
-	apiKey := getEnvVariable("TODOS_API_KEY")
+func CreateTodo(description string) error {
+	projectUrl := helpers.GetEnvVariable("TODOS_PROJECT_URL")
+	apiKey := helpers.GetEnvVariable("TODOS_API_KEY")
 	client := &http.Client{}
 
 	url := projectUrl + "/todos"
@@ -113,15 +115,15 @@ func createTodo(description string) error {
 	return nil
 }
 
-func updateTodo(updatedTodo Todo) error {
+func UpdateTodo(updatedTodo Todo) error {
 	todo, err := json.Marshal(updatedTodo)
 
 	if err != nil {
 		return err
 	}
 
-	projectUrl := getEnvVariable("TODOS_PROJECT_URL")
-	apiKey := getEnvVariable("TODOS_API_KEY")
+	projectUrl := helpers.GetEnvVariable("TODOS_PROJECT_URL")
+	apiKey := helpers.GetEnvVariable("TODOS_API_KEY")
 	client := &http.Client{}
 
 	url := projectUrl + "/todos?id=eq." + strconv.FormatInt(int64(updatedTodo.Id), 10)
@@ -139,9 +141,9 @@ func updateTodo(updatedTodo Todo) error {
 	return nil
 }
 
-func deleteTodo(id int) error {
-	projectUrl := getEnvVariable("TODOS_PROJECT_URL")
-	apiKey := getEnvVariable("TODOS_API_KEY")
+func DeleteTodo(id int) error {
+	projectUrl := helpers.GetEnvVariable("TODOS_PROJECT_URL")
+	apiKey := helpers.GetEnvVariable("TODOS_API_KEY")
 	client := &http.Client{}
 
 	url := projectUrl + "/todos?id=eq." + strconv.Itoa(id)

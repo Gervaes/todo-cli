@@ -1,4 +1,4 @@
-module todo-cli/main
+module todo-cli
 
 go 1.22.5
 

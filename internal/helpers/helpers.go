@@ -1,4 +1,4 @@
-package main
+package helpers
 
 import (
 	"log"
@@ -9,8 +9,15 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func getEnvVariable(key string) string {
-	err := godotenv.Load()
+// https://stackoverflow.com/a/72863273
+func runCmd(name string, arg ...string) {
+	cmd := exec.Command(name, arg...)
+	cmd.Stdout = os.Stdout
+	cmd.Run()
+}
+
+func GetEnvVariable(key string) string {
+	err := godotenv.Load("../../.env")
 
 	if err != nil {
 		log.Fatal("Error loading .env file")
@@ -19,14 +26,7 @@ func getEnvVariable(key string) string {
 	return os.Getenv(key)
 }
 
-// https://stackoverflow.com/a/72863273
-func runCmd(name string, arg ...string) {
-	cmd := exec.Command(name, arg...)
-	cmd.Stdout = os.Stdout
-	cmd.Run()
-}
-
-func clearTerminal() {
+func ClearTerminal() {
 	switch runtime.GOOS {
 	case "darwin":
 		runCmd("clear")
