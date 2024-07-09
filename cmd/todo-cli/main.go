@@ -8,18 +8,18 @@ import (
 	"todo-cli/internal/storage"
 )
 
-func displayTodos(getAllTodos bool) {
+func displayTodos(flags models.Flags) {
 	store := storage.NewStorage()
-	todos := store.GetTodos(getAllTodos)
+	todos := store.GetTodos(flags.GetAllTodos)
 
-	if getAllTodos {
+	if flags.GetAllTodos {
 		fmt.Printf("<< All todos (%d)>>\n", len(todos))
 	} else {
 		fmt.Printf("<< Today's todos (%d)>>\n", len(todos))
 	}
 
 	for _, todo := range todos {
-		fmt.Println(todo.ToString())
+		fmt.Println(todo.ToString(flags))
 	}
 }
 
@@ -40,7 +40,12 @@ func main() {
 			fmt.Printf("Error trying to update Todo: %s\n\n", err.Error())
 		}
 
-		todo.UpdateStatus()
+		if flags.HasNewNote() {
+			todo.UpdateNote(flags.NewNote)
+		} else {
+			todo.UpdateStatus()
+		}
+
 		err = store.UpdateTodo(todo)
 
 		if err != nil {
@@ -63,5 +68,5 @@ func main() {
 		}
 	}
 
-	displayTodos(flags.GetAllTodos)
+	displayTodos(flags)
 }
