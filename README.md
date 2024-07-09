@@ -1,6 +1,7 @@
 # todo-cli
 todo app for the cli
 
+```
 Usage of todo:
   -a    Gets all Todos not only from today. Example: todo -a
   -c string
@@ -12,3 +13,4 @@ Usage of todo:
   -n    Gets Todos with their note's information. Example: todo -n
   -u int
         Updates a Todo's status to the next logic one, unless when used with -m, that updates the Todo's note instead. Example: todo -u 8
+```
