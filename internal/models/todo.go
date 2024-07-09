@@ -63,7 +63,7 @@ func (t *Todo) ToString(flags Flags) string {
 
 	todo := fmt.Sprintf("%-5d << [ %s ] %s >> %s", t.Id, date.Format("02-Jan-2006"), t.GetStatus(), t.Description)
 	if flags.ShowTodosNote && t.Note != "" {
-		todo += fmt.Sprintf("\n                                   >> Nota: %s", t.Note)
+		todo += fmt.Sprintf("\n                                   └> Nota: %s", t.Note)
 	}
 
 	return todo
