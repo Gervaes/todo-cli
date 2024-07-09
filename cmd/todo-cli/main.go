@@ -2,15 +2,15 @@ package main
 
 import (
 	"bufio"
-	"flag"
 	"fmt"
 	"os"
-	"todo-cli/internal/database"
-	"todo-cli/internal/helpers"
+	"todo-cli/internal/models"
+	"todo-cli/internal/storage"
 )
 
 func displayTodos(getAllTodos bool) {
-	todos := database.GetTodos(getAllTodos)
+	store := storage.NewStorage()
+	todos := store.GetTodos(getAllTodos)
 
 	if getAllTodos {
 		fmt.Printf("<< All todos (%d)>>\n", len(todos))
@@ -24,36 +24,29 @@ func displayTodos(getAllTodos bool) {
 }
 
 func main() {
-	var newTodo string
-	var idToUpdate int
-	var idToDelete int
-	var getAllTodos bool
-	flag.StringVar(&newTodo, "c", "", "Creates a new todo for today with the description provided")
-	flag.IntVar(&idToUpdate, "u", 0, "Updates a todo's status to the next logic one")
-	flag.IntVar(&idToDelete, "d", 0, "Deletes a todo from the list")
-	flag.BoolVar(&getAllTodos, "a", false, "Gets all todos not only from today")
-	flag.Parse()
+	flags := models.NewFlags()
+	store := storage.NewStorage()
 
-	if newTodo != "" {
-		err := database.CreateTodo(newTodo)
+	if flags.HasNewDescription() {
+		err := store.CreateTodo(flags.NewDescription)
 
 		if err != nil {
 			fmt.Printf("Error trying to create Todo: %s\n\n", err.Error())
 		}
-	} else if idToUpdate != 0 {
-		todo, err := database.GetTodo(idToUpdate)
+	} else if flags.HasIdToUpdate() {
+		todo, err := store.GetTodo(flags.IdToUpdate)
 
 		if err != nil {
 			fmt.Printf("Error trying to update Todo: %s\n\n", err.Error())
 		}
 
 		todo.UpdateStatus()
-		err = database.UpdateTodo(todo)
+		err = store.UpdateTodo(todo)
 
 		if err != nil {
 			fmt.Printf("Error trying to update Todo: %s\n\n", err.Error())
 		}
-	} else if idToDelete != 0 {
+	} else if flags.HasIdToDelete() {
 		fmt.Printf("Are you sure you want to delete a Todo? [y/N]: ")
 		reader := bufio.NewReader(os.Stdin)
 		opt, _, err := reader.ReadRune()
@@ -62,7 +55,7 @@ func main() {
 		}
 
 		if opt == 'y' || opt == 'Y' {
-			err = database.DeleteTodo(idToDelete)
+			err = store.DeleteTodo(flags.IdToDelete)
 
 			if err != nil {
 				fmt.Printf("Error trying to delete Todo: %s\n\n", err.Error())
@@ -70,6 +63,5 @@ func main() {
 		}
 	}
 
-	helpers.ClearTerminal()
-	displayTodos(getAllTodos)
+	displayTodos(flags.GetAllTodos)
 }
