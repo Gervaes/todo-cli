@@ -12,15 +12,19 @@ func displayTodos(flags models.Flags) {
 	store := storage.NewStorage()
 	todos := store.GetTodos(flags.GetAllTodos)
 
-	if flags.GetAllTodos {
-		fmt.Printf("<< All todos (%d)>>\n", len(todos))
-	} else {
-		fmt.Printf("<< Today's todos (%d)>>\n", len(todos))
-	}
+	currentDate := ""
 
 	for _, todo := range todos {
+
+		if currentDate != todo.GetFormatedDate() {
+			fmt.Println("=========================================================================================")
+			fmt.Printf("===== << [ Todos from %s ] >> ==================================================\n", todo.GetFormatedDate())
+			currentDate = todo.GetFormatedDate()
+		}
+
 		fmt.Println(todo.ToString(flags))
 	}
+	fmt.Println("=========================================================================================")
 }
 
 func main() {

@@ -2,7 +2,6 @@ package models
 
 import (
 	"fmt"
-	"log"
 	"time"
 )
 
@@ -54,16 +53,20 @@ func (t *Todo) UpdateNote(note string) {
 	t.Note = note
 }
 
-func (t *Todo) ToString(flags Flags) string {
+func (t *Todo) GetFormatedDate() string {
 	date, err := time.Parse("2006-01-02", t.Date)
 
 	if err != nil {
-		log.Fatal(err)
+		return ""
 	}
 
-	todo := fmt.Sprintf("%-5d << [ %s ] %s >> %s", t.Id, date.Format("02-Jan-2006"), t.GetStatus(), t.Description)
+	return date.Format("02-Jan-2006")
+}
+
+func (t *Todo) ToString(flags Flags) string {
+	todo := fmt.Sprintf("%-5d << [ %s ]  %s >> %s", t.Id, t.GetFormatedDate(), t.GetStatus(), t.Description)
 	if flags.ShowTodosNote && t.Note != "" {
-		todo += fmt.Sprintf("\n                                   └> Nota: %s", t.Note)
+		todo += fmt.Sprintf("\n                                    └> Nota: %s", t.Note)
 	}
 
 	return todo
